@@ -5,9 +5,8 @@ function App() {
                     className='announcement-card'
                     aria-labelledby='announcement-title'
                >
-                    <span className='eyebrow'>iMock</span>
                     <h1 id='announcement-title'>
-                         IELTS mock tests are coming soon.
+                         IELTS mocks <br /> Coming soon.
                     </h1>
                     <p>
                          We are preparing a complete IELTS mock-test experience.
