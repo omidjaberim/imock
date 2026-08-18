@@ -66,3 +66,10 @@ p {
 
 .teaching-link:hover { background: #fcd34d; transform: translateY(-2px); }
 .teaching-link:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+
+/* Landing-page baseline */
+:root { font-family: 'DM Sans', Arial, sans-serif; color: #1c2d29; background: #fbfaf5; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; background: #fbfaf5; }
+h1, h2, h3, p { margin-top: 0; }

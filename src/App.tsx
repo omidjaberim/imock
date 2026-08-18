@@ -1,26 +1,26 @@
+import './App.css'
+import { Footer, Header } from './components/SiteChrome'
+import {
+     GroupAndBookingSections,
+     HeroSection,
+     ProcessSection,
+     ReportSection,
+     TeachersSection,
+} from './components/LandingSections'
+
 function App() {
      return (
-          <main className='announcement'>
-               <section
-                    className='announcement-card'
-                    aria-labelledby='announcement-title'
-               >
-                    <h1 id='announcement-title'>
-                         IELTS mocks <br /> Coming soon.
-                    </h1>
-                    <p>
-                         We are preparing a complete IELTS mock-test experience.
-                         Check back soon for updates.
-                    </p>
-                    <a
-                         className='teaching-link'
-                         href='https://teaching.imock.ir/'
-                    >
-                         Visit Teaching Practice
-                         <span aria-hidden='true'>→</span>
-                    </a>
-               </section>
-          </main>
+          <div className='site-shell'>
+               <Header />
+               <main id='top'>
+                    <HeroSection />
+                    <ProcessSection />
+                    <ReportSection />
+                    <TeachersSection />
+                    <GroupAndBookingSections />
+               </main>
+               <Footer />
+          </div>
      )
 }
 
