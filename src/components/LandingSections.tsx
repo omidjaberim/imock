@@ -1,4 +1,7 @@
 import './process-section.css'
+import { isLoggedIn } from '../lib/auth'
+import { Link } from 'react-router-dom'
+import { ScrollLink } from './ScrollLink'
 
 type ArrowProps = { className?: string }
 
@@ -102,19 +105,19 @@ export function HeroSection() {
                               you need to move forward with confidence.
                          </p>
                          <div className='hero-actions'>
-                              <a
+                              <ScrollLink
                                    className='button button-primary'
-                                   href='#book'
+                                   targetId='book'
                               >
                                    Take a mock test <Arrow />
-                              </a>
-                              <a
+                              </ScrollLink>
+                              <ScrollLink
                                    className='button button-text'
-                                   href='#how-it-works'
+                                   targetId='how-it-works'
                               >
                                    See how it works{' '}
                                    <span className='play'>&#9654;</span>
-                              </a>
+                              </ScrollLink>
                          </div>
                          <div className='trust-row'>
                               <div className='avatar-stack'>
@@ -195,8 +198,8 @@ export function HeroSection() {
                               We turn every mock into a clear path to your
                               target band.
                          </h2>
-                         <a
-                              href='#how-it-works'
+                         <ScrollLink
+                              targetId='how-it-works'
                               style={{
                                    width: 'fit-content',
                                    padding: '12px 18px',
@@ -211,7 +214,7 @@ export function HeroSection() {
                               }}
                          >
                               Discover the iMock experience <Arrow />
-                         </a>
+                         </ScrollLink>
                     </div>
                </section>
           </>
@@ -225,7 +228,7 @@ export function ProcessSection() {
                '▤',
                'Take the test',
                'Experience a full IELTS mock designed to feel just like test day — alone or with your class.',
-               '#book',
+               'book',
                'Explore mock tests',
           ],
           [
@@ -233,7 +236,7 @@ export function ProcessSection() {
                '⌁',
                'Get the full picture',
                'Receive a precise band score and detailed feedback across every skill, not just a number.',
-               '#report',
+               'report',
                'See a sample report',
           ],
           [
@@ -241,7 +244,7 @@ export function ProcessSection() {
                '◌',
                'Grow with guidance',
                'Turn feedback into action with practical improvement steps and a one-to-one teacher review.',
-               '#teachers',
+               'teachers',
                'Meet our teachers',
           ],
      ]
@@ -263,7 +266,7 @@ export function ProcessSection() {
                     </div>
                </div>
                <div className='process-grid'>
-                    {steps.map(([number, , title, body, href, link], index) => (
+                    {steps.map(([number, , title, body, targetId, link], index) => (
                          <article
                               key={number}
                               style={{
@@ -314,12 +317,12 @@ export function ProcessSection() {
                               </div>
                               <h3>{title}</h3>
                               <p>{body}</p>
-                              <a
-                                   href={href}
+                              <ScrollLink
+                                   targetId={targetId}
                                    style={{ marginTop: 'auto' }}
                               >
                                    {link} <Arrow />
-                              </a>
+                              </ScrollLink>
                          </article>
                     ))}
                </div>
@@ -371,7 +374,7 @@ export function ReportSection() {
                               <br />
                               <em>breakthrough</em>
                               <br />
-                              starts here. <span>near</span>
+                              starts here. <span>&nearr</span>
                          </div>
                     </div>
                     <div className='report-copy'>
@@ -399,12 +402,12 @@ export function ReportSection() {
                                    your next test
                               </li>
                          </ul>
-                         <a
+                         <ScrollLink
                               className='button button-dark'
-                              href='#book'
+                              targetId='book'
                          >
                               Get your detailed report <Arrow />
-                         </a>
+                         </ScrollLink>
                     </div>
                </div>
           </section>
@@ -436,9 +439,9 @@ export function TeachersSection() {
                          goals. Our IELTS specialists are here to help you make
                          sense of every result.
                     </p>
-                    <a href='#book'>
+                    <ScrollLink targetId='book'>
                          Meet the full team <Arrow />
-                    </a>
+                    </ScrollLink>
                </div>
                <div className='teacher-list'>
                     {teachers.map(([initials, name, tone]) => (
@@ -451,9 +454,9 @@ export function TeachersSection() {
                                    <i>&#10022;</i>
                               </div>
                               <h3>{name}</h3>
-                              <a href='#book'>
+                              <ScrollLink targetId='book'>
                                    Book a review <Arrow />
-                              </a>
+                              </ScrollLink>
                          </article>
                     ))}
                </div>
@@ -462,6 +465,10 @@ export function TeachersSection() {
 }
 
 export function GroupAndBookingSections() {
+     const bookingHref = isLoggedIn()
+          ? 'mailto:hello@imock.ir?subject=I%20want%20to%20book%20an%20IELTS%20mock'
+          : '/auth'
+
      return (
           <>
                <section
@@ -522,12 +529,12 @@ export function GroupAndBookingSections() {
                          Take a mock, get real feedback, and have a teacher in
                          your corner.
                     </p>
-                    <a
+                    <Link
                          className='button button-primary'
-                         href='mailto:hello@imock.ir?subject=I%20want%20to%20book%20an%20IELTS%20mock'
+                         to={bookingHref}
                     >
                          Book your mock test <Arrow />
-                    </a>
+                    </Link>
                </section>
           </>
      )
