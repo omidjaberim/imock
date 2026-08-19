@@ -1,0 +1,1 @@
+.profile-menu.is-closing{pointer-events:none;animation:profile-menu-exit .2s ease-in both}@keyframes profile-menu-exit{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(-8px) scale(.85)}}@media(prefers-reduced-motion:reduce){.profile-menu.is-closing{animation:profile-menu-exit .01ms linear both}}

@@ -1,0 +1,378 @@
+.exam-page {
+     min-height: 100vh;
+     background: #f7f5ef;
+     color: #17233d;
+     font-family: Arial, sans-serif;
+}
+.exam-header {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     max-width: 1040px;
+     margin: 0 auto;
+     padding: 24px 28px;
+}
+.exam-back {
+     color: #485365;
+     font-size: 14px;
+     font-weight: 700;
+     text-decoration: none;
+     display: inline-block;
+     transition:
+          transform 0.22s ease,
+          color 0.22s ease;
+     will-change: transform;
+}
+.exam-back:hover {
+     color: #d65336;
+     transform: translateX(-6px);
+}
+.exam-card {
+     max-width: 720px;
+     margin: 50px auto;
+     padding: 44px;
+     border: 1px solid #e9e5dc;
+     border-radius: 22px;
+     background: #fff;
+     box-shadow: 0 20px 50px rgb(23 35 61 / 8%);
+}
+.exam-kicker {
+     margin: 0 0 18px;
+     color: #d65336;
+     font-size: 12px;
+     font-weight: 800;
+     letter-spacing: 1.4px;
+     text-transform: uppercase;
+}
+.exam-meta {
+     display: flex;
+     justify-content: space-between;
+     color: #70798a;
+     font-size: 14px;
+}
+.exam-card h1 {
+     margin: 24px 0 14px;
+     font-size: clamp(32px, 5vw, 48px);
+     letter-spacing: -2px;
+}
+.exam-prompt {
+     max-width: 600px;
+     color: #485365;
+     font-size: 18px;
+     line-height: 1.6;
+}
+.exam-options {
+     display: grid;
+     gap: 12px;
+     margin: 30px 0;
+}
+.exam-options button {
+     padding: 15px 18px;
+     border: 1px solid #d9dfe7;
+     border-radius: 10px;
+     background: #fff;
+     color: #17233d;
+     text-align: left;
+     font: inherit;
+     font-weight: 700;
+     cursor: pointer;
+     transition:
+          transform 0.2s ease,
+          border-color 0.2s ease,
+          background 0.2s ease;
+}
+.exam-options button:hover,
+.exam-options button.selected {
+     border-color: #d65336;
+     background: #fceedf;
+     transform: translateX(5px);
+}
+.exam-submit {
+     padding: 14px 19px;
+     border: 0;
+     border-radius: 8px;
+     background: #172f58;
+     color: #fff;
+     font: inherit;
+     font-weight: 700;
+     cursor: pointer;
+     transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+}
+.exam-submit:not(:disabled):hover {
+     transform: translateY(-3px);
+     box-shadow: 0 9px 18px rgb(23 47 88 / 25%);
+}
+.exam-submit:disabled {
+     opacity: 0.45;
+     cursor: not-allowed;
+}
+.exam-feedback {
+     margin-top: 20px;
+     color: #28725f;
+     font-weight: 700;
+}
+@media (max-width: 760px) {
+     .exam-header {
+          padding: 20px;
+     }
+     .exam-card {
+          margin: 20px;
+          padding: 28px;
+     }
+     .exam-meta {
+          gap: 12px;
+          flex-direction: column;
+     }
+}
+
+/* Reading page info list styling — match dashboard classroom card visuals */
+.reading-info-list {
+     display: grid;
+     gap: 10px;
+     margin: 18px 0 22px;
+     padding: 0;
+     list-style: none;
+     color: #405269;
+     font-size: 16px;
+}
+.reading-info-list li {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+     padding: 10px 12px;
+     border-radius: 10px;
+     background: #fbfffb;
+     border: 1px solid #e6f1ea;
+}
+.reading-info-list li::before {
+     content: '✓';
+     color: #d65336;
+     font-weight: 800;
+     margin-right: 6px;
+}
+@media (max-width: 760px) {
+     .reading-info-list {
+          font-size: 15px;
+     }
+}
+
+/* Section / Time / Questions table styling for Complete mock */
+.section-time-questions {
+     width: 100%;
+     border-collapse: separate;
+     border-spacing: 0;
+     margin-top: 12px;
+     font-size: 15px;
+}
+.section-time-questions thead th {
+     background: transparent;
+     text-align: left;
+     padding: 10px 12px;
+     color: #405269;
+     font-weight: 800;
+}
+.section-time-questions tbody td {
+     padding: 12px;
+     border-radius: 8px;
+     background: #fbfffb;
+     border: 1px solid #e6f1ea;
+     color: #405269;
+}
+.section-time-questions tbody tr {
+     display: table-row;
+}
+.section-time-questions tbody tr + tr td {
+     border-top: 0;
+     margin-top: 8px;
+}
+
+/* Make table responsive: stack rows on small screens */
+@media (max-width: 640px) {
+     .section-time-questions,
+     .section-time-questions thead,
+     .section-time-questions tbody,
+     .section-time-questions th,
+     .section-time-questions td,
+     .section-time-questions tr {
+          display: block;
+     }
+     .section-time-questions thead {
+          display: none;
+     }
+     .section-time-questions tbody td {
+          display: flex;
+          justify-content: space-between;
+          padding: 12px 14px;
+          margin-bottom: 8px;
+     }
+     .section-time-questions tbody td::before {
+          content: '';
+     }
+}
+
+/* Listening: Section / What it contains / Difficulty table */
+.section-what-difficulty {
+     width: 100%;
+     border-collapse: separate;
+     border-spacing: 0;
+     margin-top: 12px;
+     font-size: 15px;
+}
+.section-what-difficulty thead th {
+     background: transparent;
+     text-align: left;
+     padding: 10px 12px;
+     color: #405269;
+     font-weight: 800;
+}
+.section-what-difficulty tbody td {
+     padding: 12px;
+     border-radius: 8px;
+     background: #fbfffb;
+     border: 1px solid #e6f1ea;
+     color: #405269;
+     vertical-align: top;
+}
+.section-what-difficulty tbody tr td:first-child {
+     width: 92px;
+     font-weight: 700;
+}
+.section-what-difficulty tbody tr td:nth-child(2) {
+     padding-right: 18px;
+}
+.section-what-difficulty tbody tr td:nth-child(3) {
+     white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+     .section-what-difficulty,
+     .section-what-difficulty thead,
+     .section-what-difficulty tbody,
+     .section-what-difficulty th,
+     .section-what-difficulty td,
+     .section-what-difficulty tr {
+          display: block;
+     }
+     .section-what-difficulty thead {
+          display: none;
+     }
+     .section-what-difficulty tbody td {
+          display: flex;
+          justify-content: space-between;
+          padding: 6px 8px;
+          margin-bottom: 8px;
+     }
+     .section-what-difficulty tbody td:first-child {
+          font-weight: 700;
+     }
+}
+
+/* Writing tasks table */
+.writing-tasks {
+     width: 100%;
+     border-collapse: separate;
+     border-spacing: 0;
+     margin-top: 12px;
+     font-size: 15px;
+}
+.writing-tasks thead th {
+     background: transparent;
+     text-align: left;
+     padding: 10px 12px;
+     color: #405269;
+     font-weight: 800;
+}
+.writing-tasks tbody td {
+     padding: 12px;
+     border-radius: 8px;
+     background: #fbfffb;
+     border: 1px solid #e6f1ea;
+     color: #405269;
+     vertical-align: top;
+}
+.writing-tasks tbody tr td:first-child {
+     width: 92px;
+     font-weight: 700;
+}
+.writing-tasks tbody tr td:nth-child(3) {
+     white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+     .writing-tasks,
+     .writing-tasks thead,
+     .writing-tasks tbody,
+     .writing-tasks th,
+     .writing-tasks td,
+     .writing-tasks tr {
+          display: block;
+     }
+     .writing-tasks thead {
+          display: none;
+     }
+     .writing-tasks tbody td {
+          display: flex;
+          justify-content: space-between;
+          padding: 12px 14px;
+          margin-bottom: 8px;
+     }
+     .writing-tasks tbody td:first-child {
+          font-weight: 800;
+     }
+}
+
+/* Speaking parts chart */
+.speaking-parts {
+     width: 100%;
+     border-collapse: separate;
+     border-spacing: 0;
+     margin-top: 12px;
+     font-size: 15px;
+}
+.speaking-parts thead th {
+     background: transparent;
+     text-align: left;
+     padding: 10px 12px;
+     color: #405269;
+     font-weight: 800;
+}
+.speaking-parts tbody td {
+     padding: 12px;
+     border-radius: 8px;
+     background: #fbfffb;
+     border: 1px solid #e6f1ea;
+     color: #405269;
+     vertical-align: top;
+}
+.speaking-parts tbody tr td:first-child {
+     width: 92px;
+     font-weight: 700;
+}
+.speaking-parts tbody tr td:nth-child(3) {
+     white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+     .speaking-parts,
+     .speaking-parts thead,
+     .speaking-parts tbody,
+     .speaking-parts th,
+     .speaking-parts td,
+     .speaking-parts tr {
+          display: block;
+     }
+     .speaking-parts thead {
+          display: none;
+     }
+     .speaking-parts tbody td {
+          display: flex;
+          justify-content: space-between;
+          padding: 12px 14px;
+          margin-bottom: 8px;
+     }
+     .speaking-parts tbody td:first-child {
+          font-weight: 800;
+     }
+}

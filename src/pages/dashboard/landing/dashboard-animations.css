@@ -1,0 +1,44 @@
+.orbit-learning-steps {
+     position: relative;
+     display: grid;
+     place-items: center;
+     width: 160px;
+     height: 150px;
+     text-align: center;
+}
+
+.orbit-learning-steps p {
+     margin: 0;
+     align-self: start;
+     color: #ffd583;
+     font-size: 12px;
+     font-weight: 700;
+     line-height: 1.25;
+}
+
+.orbit-learning-steps span {
+     position: absolute;
+     top: 70px;
+     left: 0;
+     width: 100%;
+     color: #fff;
+     font-size: 15px;
+     font-weight: 700;
+     opacity: 0;
+     animation: skill-rotation 8s ease-in-out infinite;
+}
+
+.orbit-learning-steps span:nth-of-type(2) { animation-delay: 2s; }
+.orbit-learning-steps span:nth-of-type(3) { animation-delay: 4s; }
+.orbit-learning-steps span:nth-of-type(4) { animation-delay: 6s; }
+
+@keyframes skill-rotation {
+     0%, 100% { opacity: 0; transform: scale(.9); }
+     8%, 18% { opacity: 1; transform: scale(1.08); }
+     25% { opacity: 0; transform: scale(.9); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+     .orbit-learning-steps span { animation: none; }
+     .orbit-learning-steps span:first-of-type { opacity: 1; transform: none; }
+}
