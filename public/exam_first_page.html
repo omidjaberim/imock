@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Exam — Instructions & Hints</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; line-height:1.5; margin:0; padding:0; background:#f5f7fb; color:#222 }
+    header { background:#1f6feb; color:white; padding:24px 32px; }
+    h1 { margin:0; font-size:1.6rem }
+    .container { max-width:900px; margin:28px auto; background:white; padding:24px; border-radius:8px; box-shadow:0 6px 18px rgba(20,30,60,0.08) }
+    .notice { border-left:6px solid #ff1c2c; background:linear-gradient(90deg, rgba(255,28,44,0.06), rgba(255,28,44,0.03)); padding:12px 16px; margin-bottom:18px; color:#ff1c2c; font-weight:700; border-radius:6px }
+    .section { margin-bottom:18px }
+    .grid { display:grid; grid-template-columns:1fr; gap:12px }
+    .hint { background:#f1f8ff; padding:12px; border-radius:6px }
+    ul { margin:8px 0 0 20px }
+    .start { display:flex; gap:12px; align-items:center; margin-top:20px }
+    button { background:#1f6feb; color:white; border:0; padding:10px 16px; border-radius:6px; cursor:pointer }
+    button.secondary { background:#eef2ff; color:#0b3a9a }
+    footer { text-align:center; color:#666; font-size:0.9rem; margin-top:18px }
+    /* modal overlay */
+    .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:9999 }
+    .overlay .box { background:white; padding:18px; border-radius:8px; max-width:520px; box-shadow:0 10px 30px rgba(0,0,0,0.25) }
+    .infractions { color:#b0413e; font-weight:600 }
+    @media(min-width:700px){ .grid{ grid-template-columns: 1fr 1fr } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Exam — Instructions & Hints</h1>
+  </header>
+
+  <main class="container" role="main">
+    <div class="notice" aria-live="polite">
+      <strong>Important:</strong> Do NOT switch tabs and do NOT close the browser during the exam. Leaving the exam page may automatically submit your attempt or trigger an integrity warning.
+    </div>
+
+    <div class="section">
+      <h2>Quick Overview (IELTS-style)</h2>
+      <div class="grid">
+        <div class="hint">
+          <strong>Listening</strong><br>
+          Duration: ~30–40 minutes (including transfer time). 4 sections — conversations and monologues. Focus on: keywords, synonyms, and note-taking.
+        </div>
+        <div class="hint">
+          <strong>Reading</strong><br>
+          Duration: 60 minutes. 3 long passages, different question types (multiple choice, matching, True/False/Not Given). Skim, scan, and manage time per passage.
+        </div>
+        <div class="hint">
+          <strong>Writing</strong><br>
+          Duration: 60 minutes. Task 1: describe data (chart/table) — 20 mins. Task 2: essay — 40 mins. Plan, write clear paragraphs, answer the prompt fully.
+        </div>
+        <div class="hint">
+          <strong>Speaking</strong><br>
+          Duration: 11–14 minutes. Short interview, cue-card, discussion. Speak clearly and develop answers with examples.
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Top tips</h2>
+      <ul>
+        <li>Read instructions for each question carefully — small differences matter.</li>
+        <li>Time management: keep an eye on the section timer and move on if a question is taking too long.</li>
+        <li>For Listening & Reading, underline or take short notes; for Writing, spend 5–10 minutes planning your Task 2 essay.</li>
+        <li>Use clear structure: intro, 2–3 paragraphs, conclusion for essays.</li>
+        <li>Speak naturally in the Speaking section — fluency and coherence count as much as vocabulary.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Technical instructions for this exam</h2>
+      <ul>
+        <li>Use the latest version of Chrome, Edge, or Firefox for best compatibility.</li>
+        <li>Ensure a stable internet connection and charger connected for laptops.</li>
+        <li>Close other apps and browser tabs to avoid distractions and reduce chance of accidental tab switches.</li>
+        <li>This page will warn you if you try to leave or switch tabs. Repeated tab switches may be recorded as infractions.</li>
+        <li>If a popup appears asking to allow microphone/camera, follow the on-screen prompts (only if required by a proctoring step).</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>On leaving the page</h2>
+      <p>If you attempt to close the browser or reload the page, the system will ask for confirmation. Switching tabs will show a warning overlay here — please return immediately to continue. If you have a genuine technical issue, contact proctor/support right away instead of repeatedly switching tabs.</p>
+    </div>
+
+    <div class="start">
+      <button id="startBtn">Start Exam</button>
+      <button class="secondary" id="practiceBtn">Open Practice / Read More</button>
+      <div style="margin-left:auto; color:#444">Infractions: <span id="count">0</span></div>
+    </div>
+
+    <footer>
+      Good luck — read each question carefully and manage your time. This page is only an instructions hub; the exam content will follow after you press "Start Exam."
+    </footer>
+  </main>
+
+  <div id="overlay" class="overlay" role="alertdialog" aria-hidden="true">
+    <div class="box">
+      <h3>Warning — Do not leave the exam</h3>
+      <p>Switching tabs or leaving the exam page is not allowed. Please return to this tab immediately. Continued switches will be recorded as infractions.</p>
+      <p class="infractions">Infractions recorded: <span id="infCount">0</span></p>
+      <div style="text-align:right; margin-top:12px"><button id="closeOverlay">I am back</button></div>
+    </div>
+  </div>
+
+  <script>
+    // Count how many times user leaves the tab or hides the document
+    (function(){
+      var infractions = 0;
+      var infSpan = document.getElementById('infCount');
+      var countSpan = document.getElementById('count');
+      var overlay = document.getElementById('overlay');
+      var closeOverlay = document.getElementById('closeOverlay');
+
+      function showOverlay(){
+        infractions += 1;
+        infSpan.textContent = infractions;
+        countSpan.textContent = infractions;
+        overlay.style.display = 'flex';
+        overlay.setAttribute('aria-hidden','false');
+      }
+      function hideOverlay(){
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden','true');
+      }
+
+      document.addEventListener('visibilitychange', function(){
+        if (document.hidden) {
+          // user switched tabs or minimized
+          showOverlay();
+        }
+      });
+
+      closeOverlay.addEventListener('click', function(){ hideOverlay(); });
+
+      // Warn when closing/reloading
+      window.addEventListener('beforeunload', function (e) {
+        var confirmationMessage = 'You are about to leave the exam. Leaving may submit your exam or be recorded as an integrity event.';
+        (e || window.event).returnValue = confirmationMessage; // Gecko + IE
+        return confirmationMessage; // Webkit, Chrome
+      });
+
+      // Start and practice buttons (placeholder behaviour)
+      document.getElementById('startBtn').addEventListener('click', function(){
+        // In a real exam the exam engine would load here. For now show a confirmation and proceed.
+        if (confirm('Start the exam now? Do not switch tabs or close the browser during the exam.')){
+          alert('Exam would start now. (This is a placeholder)');
+        }
+      });
+      document.getElementById('practiceBtn').addEventListener('click', function(){
+        alert('Open practice materials in a new window or tab only if allowed by your proctor.');
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -266,65 +266,68 @@ export function ProcessSection() {
                     </div>
                </div>
                <div className='process-grid'>
-                    {steps.map(([number, , title, body, targetId, link], index) => (
-                         <article
-                              key={number}
-                              style={{
-                                   minHeight: 300,
-                                   display: 'flex',
-                                   flexDirection: 'column',
-                                   padding: '26px',
-                                   border: '1px solid #dce6df',
-                                   borderTop: '3px solid #245d50',
-                                   borderRadius: '8px',
-                                   background: '#f5f8f4',
-                                   boxShadow: '0 10px 24px rgb(24 51 45 / 6%)',
-                                   position: 'relative',
-                              }}
-                         >
-                              {index < steps.length - 1 && (
-                                   <span
-                                        className='process-connector'
-                                        aria-hidden='true'
-                                        style={{
-                                             position: 'absolute',
-                                             top: '50%',
-                                             right: '-43px',
-                                             zIndex: 1,
-                                             color: '#ec7053',
-                                             fontFamily: 'Georgia, serif',
-                                             fontSize: '28px',
-                                             fontWeight: 600,
-                                             transform: 'translateY(-50%)',
-                                        }}
-                                   >
-                                        &rarr;
-                                   </span>
-                              )}
-                              <div
-                                   className='line-icon'
-                                   style={{ color: '#ec7053' }}
+                    {steps.map(
+                         ([number, , title, body, targetId, link], index) => (
+                              <article
+                                   key={number}
+                                   style={{
+                                        minHeight: 300,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        padding: '26px',
+                                        border: '1px solid #dce6df',
+                                        borderTop: '3px solid #245d50',
+                                        borderRadius: '8px',
+                                        background: '#f5f8f4',
+                                        boxShadow:
+                                             '0 10px 24px rgb(24 51 45 / 6%)',
+                                        position: 'relative',
+                                   }}
                               >
-                                   <span
-                                        style={{
-                                             display: 'inline-flex',
-                                             width: 40,
-                                             height: 40,
-                                        }}
+                                   {index < steps.length - 1 && (
+                                        <span
+                                             className='process-connector'
+                                             aria-hidden='true'
+                                             style={{
+                                                  position: 'absolute',
+                                                  top: '50%',
+                                                  right: '-43px',
+                                                  zIndex: 1,
+                                                  color: '#ec7053',
+                                                  fontFamily: 'Georgia, serif',
+                                                  fontSize: '28px',
+                                                  fontWeight: 600,
+                                                  transform: 'translateY(-50%)',
+                                             }}
+                                        >
+                                             &rarr;
+                                        </span>
+                                   )}
+                                   <div
+                                        className='line-icon'
+                                        style={{ color: '#ec7053' }}
                                    >
-                                        <ProcessIcon step={number} />
-                                   </span>
-                              </div>
-                              <h3>{title}</h3>
-                              <p>{body}</p>
-                              <ScrollLink
-                                   targetId={targetId}
-                                   style={{ marginTop: 'auto' }}
-                              >
-                                   {link} <Arrow />
-                              </ScrollLink>
-                         </article>
-                    ))}
+                                        <span
+                                             style={{
+                                                  display: 'inline-flex',
+                                                  width: 40,
+                                                  height: 40,
+                                             }}
+                                        >
+                                             <ProcessIcon step={number} />
+                                        </span>
+                                   </div>
+                                   <h3>{title}</h3>
+                                   <p>{body}</p>
+                                   <ScrollLink
+                                        targetId={targetId}
+                                        style={{ marginTop: 'auto' }}
+                                   >
+                                        {link} <Arrow />
+                                   </ScrollLink>
+                              </article>
+                         ),
+                    )}
                </div>
           </section>
      )
@@ -465,9 +468,7 @@ export function TeachersSection() {
 }
 
 export function GroupAndBookingSections() {
-     const bookingHref = isLoggedIn()
-          ? 'mailto:hello@imock.ir?subject=I%20want%20to%20book%20an%20IELTS%20mock'
-          : '/auth'
+     const bookingHref = isLoggedIn() ? '/dashboard' : '/auth'
 
      return (
           <>
@@ -533,7 +534,7 @@ export function GroupAndBookingSections() {
                          className='button button-primary'
                          to={bookingHref}
                     >
-                         Book your mock test <Arrow />
+                         Take your mock test <Arrow />
                     </Link>
                </section>
           </>

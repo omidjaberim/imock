@@ -1,0 +1,81 @@
+.exam-intro{display:flex;flex-direction:column;height:100%;font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial}
+.exam-intro{--orb-one-1: #ffd583; --orb-one-2: rgba(255,213,131,0.12); --orb-two-1: #ec7070; --orb-two-2: rgba(236,112,112,0.08); --orb-three-1: #6e85a9; --orb-three-2: rgba(110,133,169,0.08)}
+.exam-intro__header{padding:20px 22px;border-bottom:1px solid rgba(255,255,255,0.04);background:transparent}
+.exam-intro__header h2{margin:0;font-size:20px;color:#e9f2ff}
+.exam-intro__header .muted{color:#ffffff;font-size:13px;margin-top:6px;font-weight:600;text-shadow:0 1px 0 rgba(0,0,0,0.25)}
+.exam-intro__notice{padding:14px 20px;background:linear-gradient(90deg, rgba(255,20,28,0.06), rgba(255,20,28,0.03));border-left:6px solid #ff1c2c;color:#ff1c2c;font-weight:700;border-radius:6px}
+.exam-intro__grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:10px}
+.card strong{display:block;margin-bottom:6px;color:#dff0ff}
+.card p{color:#bcd0e8;font-size:14px;margin:0}
+
+/* single-skill entry card styling (for the 4 practice modals) */
+.exam-intro__entry-card{margin:16px auto;padding:24px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 12px 30px rgba(2,6,20,0.45);border:1px solid rgba(255,255,255,0.03);max-width:760px;width:min(92%,760px)}
+.exam-intro__entry-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.exam-intro__entry-title{font-size:18px;color:#dff0ff;display:inline-block}
+.exam-intro__entry-duration{color:#bcd0e8}
+.exam-intro__entry-prompt{color:#cbd7e6;margin-top:12px}
+.exam-intro__entry-tips{margin-top:12px;color:#c1d6ee}
+.exam-intro__icon{display:inline-grid;place-items:center;width:40px;height:40px;background:rgba(255,255,255,0.02);border-radius:10px;color:#e6f3ff}
+.exam-intro__entry-body{margin-top:12px}.exam-intro__tips{padding:0 18px 12px;color:#c1d6ee}
+.exam-intro__tips h4{margin:0 0 8px;color:#e6f3ff}
+.exam-intro__tips ul{margin:0;padding-left:18px}
+.exam-intro__footer{margin-top:auto;padding:12px 18px;border-top:1px solid rgba(255,255,255,0.03);display:flex;justify-content:space-between;align-items:center;color:#b7c7df}
+.muted{color:#93a6c0}
+/* per-skill accents */
+.skill-accent--speaking .exam-intro__entry-title{color:#ffd0a8}
+.skill-accent--writing .exam-intro__entry-title{color:#d2b8ff}
+.skill-accent--listening .exam-intro__entry-title{color:#a8fff0}
+.skill-accent--reading .exam-intro__entry-title{color:#ffd7a8}
+/* per-skill orb color overrides (set CSS variables) */
+.skill-accent--speaking{--orb-one-1:#ffd583;--orb-one-2:rgba(255,213,131,0.12);--orb-two-1:#ff9a7a;--orb-two-2:rgba(255,154,122,0.06)}
+.skill-accent--writing{--orb-one-1:#cfa4ff;--orb-one-2:rgba(207,164,255,0.12);--orb-two-1:#8ea4ff;--orb-two-2:rgba(142,164,255,0.06)}
+.skill-accent--listening{--orb-one-1:#8ff3e6;--orb-one-2:rgba(143,243,230,0.12);--orb-two-1:#6ee6c9;--orb-two-2:rgba(110,230,201,0.06)}
+.skill-accent--reading{--orb-one-1:#ffd583;--orb-one-2:rgba(255,213,131,0.12);--orb-two-1:#ffb37a;--orb-two-2:rgba(255,179,122,0.06)}
+
+/* per-skill accents */
+.skill-accent--speaking .exam-intro__entry-title{color:#ffd0a8}
+.skill-accent--writing .exam-intro__entry-title{color:#d2b8ff}
+.skill-accent--listening .exam-intro__entry-title{color:#a8fff0}
+.skill-accent--reading .exam-intro__entry-title{color:#ffd7a8}
+
+/* per-skill orb color overrides */
+.skill-accent--speaking .exam-modal-orb.orb-one{background:radial-gradient(circle,#ffd583 0%,rgba(255,213,131,0.12) 40%,transparent 60%)}
+.skill-accent--speaking .exam-modal-orb.orb-two{background:radial-gradient(circle,#ff9a7a 0%,rgba(255,154,122,0.06) 40%,transparent 60%)}
+
+.skill-accent--writing .exam-modal-orb.orb-one{background:radial-gradient(circle,#cfa4ff 0%,rgba(207,164,255,0.12) 40%,transparent 60%)}
+.skill-accent--writing .exam-modal-orb.orb-two{background:radial-gradient(circle,#8ea4ff 0%,rgba(142,164,255,0.06) 40%,transparent 60%)}
+
+.skill-accent--listening .exam-modal-orb.orb-one{background:radial-gradient(circle,#8ff3e6 0%,rgba(143,243,230,0.12) 40%,transparent 60%)}
+.skill-accent--listening .exam-modal-orb.orb-two{background:radial-gradient(circle,#6ee6c9 0%,rgba(110,230,201,0.06) 40%,transparent 60%)}
+
+.skill-accent--reading .exam-modal-orb.orb-one{background:radial-gradient(circle,#ffd583 0%,rgba(255,213,131,0.12) 40%,transparent 60%)}
+.skill-accent--reading .exam-modal-orb.orb-two{background:radial-gradient(circle,#ffb37a 0%,rgba(255,179,122,0.06) 40%,transparent 60%)}
+
+@media(max-width:700px){.exam-intro__grid{grid-template-columns:1fr}}
+
+/* Readable variant when ExamIntro renders inside a light reading modal */
+.reading-modal-panel .exam-intro__header{padding:12px 0;border-bottom:1px solid rgba(23,35,61,0.04);background:transparent}
+.reading-modal-panel .exam-intro__header h2{color:#17233d}
+.reading-modal-panel .exam-intro__header .muted{color:#415063;text-shadow:none}
+.reading-modal-panel .exam-intro__notice{background:linear-gradient(90deg, rgba(255,20,28,0.06), rgba(255,20,28,0.02));border-left:6px solid #ff1c2c;color:#7a1a1a;font-weight:700;border-radius:6px}
+.reading-modal-panel .card{background:linear-gradient(180deg,#ffffff,#fbfffb);padding:12px;border-radius:8px;color:#17233d}
+.reading-modal-panel .card strong{color:#17233d}
+.reading-modal-panel .card p{color:#485365}
+.reading-modal-panel .exam-intro__entry-card{background:linear-gradient(180deg,#ffffff,#fbfffb);box-shadow:0 8px 20px rgba(23,35,61,0.06);border:1px solid #e9e5dc;color:#17233d}
+.reading-modal-panel .exam-intro__entry-title{color:#17233d}
+.reading-modal-panel .exam-intro__entry-duration{color:#66788a}
+.reading-modal-panel .exam-intro__entry-prompt{color:#596576}
+.reading-modal-panel .exam-intro__entry-tips{color:#596576}
+.reading-modal-panel .exam-intro__icon{background:rgba(0,0,0,0.03);color:#17233d}
+.reading-modal-panel .exam-intro__tips h4{color:#17233d}
+.reading-modal-panel .exam-intro__tips{color:#485365}
+.reading-modal-panel .exam-intro__footer{border-top:1px solid rgba(23,35,61,0.04);color:#66788a}
+
+/* Constrain reading modal panel height and style scrollbars for a nicer scroll experience */
+.reading-modal-panel{ -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: rgba(23,35,61,0.12) transparent; }
+.reading-modal-panel::-webkit-scrollbar{ width:10px; height:10px; }
+.reading-modal-panel::-webkit-scrollbar-track{ background:transparent; }
+.reading-modal-panel::-webkit-scrollbar-thumb{ background:rgba(23,35,61,0.12); border-radius:10px; border:2px solid rgba(255,255,255,0.6); }
+.reading-modal-panel::-webkit-scrollbar-thumb:hover{ background:rgba(23,35,61,0.18); }
+

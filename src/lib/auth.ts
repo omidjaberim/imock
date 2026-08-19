@@ -1,6 +1,7 @@
 export type AuthUser = {
      name: string
      provider: 'password' | 'phone' | 'google'
+     token?: string
 }
 
 const sessionKey = 'imock-auth-user'
@@ -20,6 +21,10 @@ export function getCurrentUser(): AuthUser | null {
 
 export function startSession(user: AuthUser) {
      localStorage.setItem(sessionKey, JSON.stringify(user))
+}
+
+export function endSession() {
+     localStorage.removeItem(sessionKey)
 }
 
 export function isLoggedIn() {
