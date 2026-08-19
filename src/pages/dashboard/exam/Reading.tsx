@@ -6,7 +6,7 @@ import './exam.css'
 
 export default function ReadingPage() {
      const [started, setStarted] = useState(false)
-     const [timeLeft, setTimeLeft] = useState(60 * 60) // example: 60 minutes for this practice
+     // const timeLeft = 60 * 60 // example: 60 minutes for this practice
 
      // Modal state for confirmation
      const [confirmModalOpen, setConfirmModalOpen] = useState(false)
@@ -16,13 +16,13 @@ export default function ReadingPage() {
      const lastActiveRef = React.useRef<HTMLElement | null>(null)
 
      // Minimal timer - only runs locally for demonstration
-     React.useEffect(() => {
-          if (!started) return
-          const id = setInterval(() => {
-               setTimeLeft((t) => (t > 0 ? t - 1 : 0))
-          }, 1000)
-          return () => clearInterval(id)
-     }, [started])
+     // React.useEffect(() => {
+     //      if (!started) return
+     //      const id = setInterval(() => {
+     //           setTimeLeft((t) => (t > 0 ? t - 1 : 0))
+     //      }, 1000)
+     //      return () => clearInterval(id)
+     // }, [started])
 
      // infractions tracking while modal open
      React.useEffect(() => {
