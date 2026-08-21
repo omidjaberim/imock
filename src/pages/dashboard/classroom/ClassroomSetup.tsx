@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
 import type { FormEvent } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import DashboardHeader from '../../../components/DashboardHeader'
 import { getCurrentUser } from '../../../lib/auth'
 import { toast } from 'react-toastify'
 import './classroom.css'
 
 export default function ClassroomSetup() {
      const user = getCurrentUser()
+
+     if (!user) return null
 
      const [step, setStep] = useState<number>(1)
      const [className, setClassName] = useState<string>('')
@@ -141,14 +144,6 @@ export default function ClassroomSetup() {
           }
      }
 
-     if (!user)
-          return (
-               <Navigate
-                    to='/auth'
-                    replace
-               />
-          )
-
      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
      const addStudent = async () => {
@@ -164,9 +159,13 @@ export default function ClassroomSetup() {
 
           if (loadedSavedId) {
                try {
-                    await updateSavedClass(loadedSavedId, {
-                         students: newStudents,
-                    }, false)
+                    await updateSavedClass(
+                         loadedSavedId,
+                         {
+                              students: newStudents,
+                         },
+                         false,
+                    )
                     toast.success('Added student and updated saved class')
                } catch (err) {
                     console.error(err)
@@ -197,7 +196,15 @@ export default function ClassroomSetup() {
           }
      }
 
-     const createClassroom = async (event?: FormEvent<HTMLFormElement>, examType: 'complete' | 'listening' | 'reading' | 'speaking' | 'writing' = 'complete') => {
+     const createClassroom = async (
+          event?: FormEvent<HTMLFormElement>,
+          examType:
+               | 'complete'
+               | 'listening'
+               | 'reading'
+               | 'speaking'
+               | 'writing' = 'complete',
+     ) => {
           if (event) event.preventDefault()
 
           if (!schedule) {
@@ -209,7 +216,9 @@ export default function ClassroomSetup() {
                return
           }
           if (!students.length) {
-               toast.error('Please add at least one student email before creating the exam.')
+               toast.error(
+                    'Please add at least one student email before creating the exam.',
+               )
                return
           }
 
@@ -240,7 +249,9 @@ export default function ClassroomSetup() {
                     throw new Error(json?.message || 'Could not create exam.')
                }
 
-               toast.success(`${examType.charAt(0).toUpperCase() + examType.slice(1)} IELTS mock created and emails sent`)
+               toast.success(
+                    `${examType.charAt(0).toUpperCase() + examType.slice(1)} IELTS mock created and emails sent`,
+               )
                setSchedule('')
                setStep(1)
                await refreshSaved()
@@ -420,14 +431,7 @@ export default function ClassroomSetup() {
 
      return (
           <main className='classroom-page'>
-               <header className='classroom-header'>
-                    <Link
-                         to='/dashboard'
-                         className='dashboard-brand'
-                    >
-                         <i>i</i>mock<span>.</span>
-                    </Link>
-               </header>
+               <DashboardHeader />
 
                <section className='classroom-setup-card'>
                     <div className='flex items-center justify-between'>
@@ -451,317 +455,615 @@ export default function ClassroomSetup() {
                     </p>
 
                     {step === 1 && (
-                          <>
-                               <div className='saved-classes-inline'>
-                                    <div className='saved-classes-inline__header'>
-                                         <h3>Saved classes</h3>
-                                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                              <button
-                                                   type='button'
-                                                   className='saved-class-action saved-class-action--secondary'
-                                                   onClick={openExamModal}
-                                              >
-                                                   <span className='saved-class-action__icon' aria-hidden='true'>⏱</span>
-                                                   Upcoming exams
-                                              </button>
-                                              <button
-                                                   type='button'
-                                                   className='saved-class-action saved-class-action--secondary'
-                                                   onClick={async () => {
-                                                        setLoadingSaved(true)
-                                                        const list = await loadClassesList()
-                                                        setSavedClasses(list || [])
-                                                        setLoadingSaved(false)
-                                                   }}
-                                              >
-                                                   <span className='saved-class-action__icon' aria-hidden='true'>↻</span>
-                                                   {loadingSaved ? 'Loading' : 'Refresh'}
-                                              </button>
-                                         </div>
-                                    </div>
-
-                                    {savedClasses && savedClasses.length > 0 ? (
-                                         <>
-                                              <ul className='saved-inline-list'>
-                                                   {savedClasses.map((c: any) => (
-                                                        <li
-                                                             key={c._id}
-                                                             className='saved-list-item'
-                                                             onClick={() => {
-                                                                  setClassName(c.name || '')
-                                                                  setTutorName(c.tutorName || '')
-                                                                  setStudents(c.students || [])
-                                                                  setLoadedSavedId(c._id)
-                                                             }}
-                                                        >
-                                                             <div style={{ flex: 1 }}>
-                                                                  <div style={{ fontWeight: 800 }}>{c.name}</div>
-                                                                  <div style={{ color: '#66788a', fontSize: 13 }}>
-                                                                       {(c.students || []).length} students ? {new Date(c.createdAt).toLocaleString()}
-                                                                  </div>
-                                                             </div>
-                                                             <div style={{ display: 'flex', gap: 6 }}>
-                                                                  <button
-                                                                       className='saved-class-action saved-class-action--primary'
-                                                                       onClick={(e) => {
-                                                                            e.stopPropagation()
-                                                                            setClassName(c.name || '')
-                                                                            setTutorName(c.tutorName || '')
-                                                                            setStudents(c.students || [])
-                                                                            setLoadedSavedId(c._id)
-                                                                       }}
-                                                                  >
-                                                                       <span className='saved-class-action__icon' aria-hidden='true'>✓</span>
-                                                                       Select
-                                                                  </button>
-                                                                  <button
-                                                                       className='saved-class-action saved-class-action--danger'
-                                                                       onClick={(e) => {
-                                                                            e.stopPropagation()
-                                                                            deleteSavedClass(c._id)
-                                                                       }}
-                                                                  >
-                                                                       <span className='saved-class-action__icon' aria-hidden='true'>🗑</span>
-                                                                       Delete
-                                                                  </button>
-                                                             </div>
-                                                        </li>
-                                                   ))}
-                                              </ul>
-                                         </>
-                                    ) : (
-                                         <p style={{ color: '#66788a' }}>No saved classes found.</p>
-                                    )}
-                               </div>
-
-                               <div>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                                         <h3 style={{ margin: 0, fontSize: 18 }}>Step 1 Create the class</h3>
-                                    </div>
-
-                                    <div style={{ display: 'grid', gap: 12 }}>
-                                         <label>
-                                              Classroom name
-                                              <input
-                                                   value={className}
-                                                   onChange={(e) => setClassName(e.target.value)}
-                                                   required
-                                                   placeholder='e.g. Autumn IELTS cohort'
-                                              />
-                                         </label>
-                                         <label>
-                                              Tutor name
-                                              <input
-                                                   value={tutorName}
-                                                   onChange={(e) => setTutorName(e.target.value)}
-                                                   required
-                                                   placeholder='Your name or tutor name'
-                                              />
-                                         </label>
-
-                                         <div>
-                                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                                                   <div style={{ fontWeight: 800 }}>Students</div>
-                                                   <div style={{ color: '#66788a', fontSize: 13 }}>{students.length} added</div>
-                                              </div>
-
-                                              <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-                                                   <input
-                                                        placeholder='Add student email'
-                                                        value={studentInput}
-                                                        onChange={(e) => setStudentInput(e.target.value)}
-                                                        onKeyDown={(e) => {
-                                                             if (e.key === 'Enter') {
-                                                                  e.preventDefault()
-                                                                  addStudent()
-                                                             }
-                                                        }}
-                                                        style={{ flex: 1 }}
-                                                        type='email'
-                                                   />
-                                                   <button
-                                                        type='button'
-                                                        className='button'
-                                                        onClick={addStudent}
-                                                        style={{ padding: '8px 12px' }}
-                                                        disabled={!emailRegex.test(studentInput.trim())}
-                                                   >
-                                                        <span aria-hidden='true'>＋</span> Add
-                                                   </button>
-                                              </div>
-
-                                              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                                   {students.map((s, i) => (
-                                                        <div key={i} style={{ position: 'relative', display: 'inline-block', marginBottom: 8 }}>
-                                                             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: '#fbfffb', border: '1px solid #e6f1ea', borderRadius: 12, minWidth: 80 }}>
-                                                                  <span style={{ color: '#405269', fontSize: 13 }}>{s}</span>
-                                                             </span>
-                                                             <button
-                                                                  aria-label={`Remove ${s}`}
-                                                                  type='button'
-                                                                  onClick={() => removeStudent(i)}
-                                                                  style={{ position: 'absolute', top: -10, right: -1, background: 'transparent', border: 'none', width: 18, height: 18, display: 'grid', placeItems: 'center', cursor: 'pointer', color: '#d65336', boxShadow: 'none', fontSize: 12, lineHeight: 1 }}
-                                                             >
-                                                                  x
-                                                             </button>
-                                                        </div>
-                                                   ))}
-                                              </div>
-                                         </div>
-
-                                         <div style={{ display: 'flex', gap: 10, alignItems: 'start', flexDirection: 'column' }}>
-                                              <div className='flex gap-5'>
-                                                   {loadedSavedId ? (
-                                                        <button
-                                                             type='button'
-                                                             className='button'
-                                                             onClick={updateCurrentSavedClass}
-                                                             style={{ background: '#ffd583', color: '#17233d' }}
-                                                             disabled={!className.trim() || !tutorName.trim() || students.length === 0}
-                                                        >
-                                                             <span aria-hidden='true'>✎</span> Update
-                                                        </button>
-                                                   ) : (
-                                                        <button
-                                                             type='button'
-                                                             className='button'
-                                                             onClick={createSavedClass}
-                                                             style={{ background: '#ffd583', color: '#17233d' }}
-                                                             disabled={!className.trim() || !tutorName.trim() || students.length === 0}
-                                                        >
-                                                             <span aria-hidden='true'>💾</span> Save
-                                                        </button>
-                                                   )}
-
-                                                   <button
-                                                        type='button'
-                                                        className='button saved-class-action saved-class-action--primary'
-                                                        disabled={!className.trim() || !tutorName.trim() || students.length === 0}
-                                                        onClick={() => setStep(2)}
-                                                   >
-                                                        <span aria-hidden='true'>📅</span> Schedule an IELTS mock for this class.
-                                                   </button>
-                                              </div>
-                                         </div>
-                                    </div>
-                               </div>
-                          </>
-                     )}
-
-{step === 2 && (
-                                   <div style={{ marginTop: 18 }}>
+                         <>
+                              <div className='saved-classes-inline'>
+                                   <div className='saved-classes-inline__header'>
+                                        <h3>Saved classes</h3>
                                         <div
                                              style={{
                                                   display: 'flex',
-                                                  alignItems: 'center',
-                                                  gap: 12,
-                                                  marginBottom: 8,
-                                                  justifyContent:
-                                                       'space-between',
+                                                  gap: 8,
+                                                  flexWrap: 'wrap',
                                              }}
                                         >
-                                             <h3
-                                                  style={{
-                                                       margin: 0,
-                                                       fontSize: 18,
-                                                  }}
-                                             >
-                                                  Step 2 Schedule & create
-                                             </h3>
                                              <button
                                                   type='button'
-                                                  onClick={() => setStep(1)}
-                                                  style={{
-                                                       background: '#eee',
-                                                       border: 'none',
-                                                       color: '#17233d',
-                                                       cursor: 'pointer',
-                                                       fontSize: 14,
-                                                       padding: 8,
+                                                  className='saved-class-action saved-class-action--secondary'
+                                                  onClick={openExamModal}
+                                             >
+                                                  <span
+                                                       className='saved-class-action__icon'
+                                                       aria-hidden='true'
+                                                  >
+                                                       ⏱
+                                                  </span>
+                                                  Upcoming exams
+                                             </button>
+                                             <button
+                                                  type='button'
+                                                  className='saved-class-action saved-class-action--secondary'
+                                                  onClick={async () => {
+                                                       setLoadingSaved(true)
+                                                       const list =
+                                                            await loadClassesList()
+                                                       setSavedClasses(
+                                                            list || [],
+                                                       )
+                                                       setLoadingSaved(false)
                                                   }}
                                              >
-                                                  <span aria-hidden='true'>←</span> step 1
+                                                  <span
+                                                       className='saved-class-action__icon'
+                                                       aria-hidden='true'
+                                                  >
+                                                       ↻
+                                                  </span>
+                                                  {loadingSaved
+                                                       ? 'Loading'
+                                                       : 'Refresh'}
                                              </button>
                                         </div>
-                                        <div
-                                             style={{
-                                                  marginBottom: 12,
-                                                  padding: '10px 12px',
-                                                  borderRadius: 10,
-                                                  background: '#f2f8f4',
-                                                  color: '#17233d',
-                                                  fontWeight: 700,
-                                             }}
-                                        >
-                                             Selected class: {className || 'Untitled class'}
-                                        </div>
-                                        <form
-                                             onSubmit={(e) => {
-                                                  e.preventDefault()
-                                                  createClassroom(e, 'complete')
-                                             }}
-                                        >
-                                             <label>
-                                                  Exam date and time
-                                                  <input
-                                                       name='schedule'
-                                                       type='datetime-local'
-                                                       required
-                                                       min={minSchedule}
-                                                       value={schedule}
-                                                       onChange={(e) =>
-                                                            setSchedule(
-                                                                 e.target.value,
-                                                            )
-                                                       }
-                                                  />
-                                             </label>
+                                   </div>
+
+                                   {savedClasses && savedClasses.length > 0 ? (
+                                        <>
+                                             <ul className='saved-inline-list'>
+                                                  {savedClasses.map(
+                                                       (c: any) => (
+                                                            <li
+                                                                 key={c._id}
+                                                                 className='saved-list-item'
+                                                                 onClick={() => {
+                                                                      setClassName(
+                                                                           c.name ||
+                                                                                '',
+                                                                      )
+                                                                      setTutorName(
+                                                                           c.tutorName ||
+                                                                                '',
+                                                                      )
+                                                                      setStudents(
+                                                                           c.students ||
+                                                                                [],
+                                                                      )
+                                                                      setLoadedSavedId(
+                                                                           c._id,
+                                                                      )
+                                                                 }}
+                                                            >
+                                                                 <div
+                                                                      style={{
+                                                                           flex: 1,
+                                                                      }}
+                                                                 >
+                                                                      <div
+                                                                           style={{
+                                                                                fontWeight: 800,
+                                                                           }}
+                                                                      >
+                                                                           {
+                                                                                c.name
+                                                                           }
+                                                                      </div>
+                                                                      <div
+                                                                           style={{
+                                                                                color: '#66788a',
+                                                                                fontSize: 13,
+                                                                           }}
+                                                                      >
+                                                                           {
+                                                                                (
+                                                                                     c.students ||
+                                                                                     []
+                                                                                )
+                                                                                     .length
+                                                                           }{' '}
+                                                                           students
+                                                                           ?{' '}
+                                                                           {new Date(
+                                                                                c.createdAt,
+                                                                           ).toLocaleString()}
+                                                                      </div>
+                                                                 </div>
+                                                                 <div
+                                                                      style={{
+                                                                           display: 'flex',
+                                                                           gap: 6,
+                                                                      }}
+                                                                 >
+                                                                      <button
+                                                                           className='saved-class-action saved-class-action--primary'
+                                                                           onClick={(
+                                                                                e,
+                                                                           ) => {
+                                                                                e.stopPropagation()
+                                                                                setClassName(
+                                                                                     c.name ||
+                                                                                          '',
+                                                                                )
+                                                                                setTutorName(
+                                                                                     c.tutorName ||
+                                                                                          '',
+                                                                                )
+                                                                                setStudents(
+                                                                                     c.students ||
+                                                                                          [],
+                                                                                )
+                                                                                setLoadedSavedId(
+                                                                                     c._id,
+                                                                                )
+                                                                           }}
+                                                                      >
+                                                                           <span
+                                                                                className='saved-class-action__icon'
+                                                                                aria-hidden='true'
+                                                                           >
+                                                                                ✓
+                                                                           </span>
+                                                                           Select
+                                                                      </button>
+                                                                      <button
+                                                                           className='saved-class-action saved-class-action--danger'
+                                                                           onClick={(
+                                                                                e,
+                                                                           ) => {
+                                                                                e.stopPropagation()
+                                                                                deleteSavedClass(
+                                                                                     c._id,
+                                                                                )
+                                                                           }}
+                                                                      >
+                                                                           <span
+                                                                                className='saved-class-action__icon'
+                                                                                aria-hidden='true'
+                                                                           >
+                                                                                🗑
+                                                                           </span>
+                                                                           Delete
+                                                                      </button>
+                                                                 </div>
+                                                            </li>
+                                                       ),
+                                                  )}
+                                             </ul>
+                                        </>
+                                   ) : (
+                                        <p style={{ color: '#66788a' }}>
+                                             No saved classes found.
+                                        </p>
+                                   )}
+                              </div>
+
+                              <div>
+                                   <div
+                                        style={{
+                                             display: 'flex',
+                                             alignItems: 'center',
+                                             justifyContent: 'space-between',
+                                             marginBottom: 10,
+                                        }}
+                                   >
+                                        <h3 style={{ margin: 0, fontSize: 18 }}>
+                                             Step 1 Create the class
+                                        </h3>
+                                   </div>
+
+                                   <div style={{ display: 'grid', gap: 12 }}>
+                                        <label>
+                                             Classroom name
+                                             <input
+                                                  value={className}
+                                                  onChange={(e) =>
+                                                       setClassName(
+                                                            e.target.value,
+                                                       )
+                                                  }
+                                                  required
+                                                  placeholder='e.g. Autumn IELTS cohort'
+                                             />
+                                        </label>
+                                        <label>
+                                             Tutor name
+                                             <input
+                                                  value={tutorName}
+                                                  onChange={(e) =>
+                                                       setTutorName(
+                                                            e.target.value,
+                                                       )
+                                                  }
+                                                  required
+                                                  placeholder='Your name or tutor name'
+                                             />
+                                        </label>
+
+                                        <div>
                                              <div
                                                   style={{
                                                        display: 'flex',
-                                                       gap: 10,
+                                                       justifyContent:
+                                                            'space-between',
+                                                       alignItems: 'center',
+                                                       marginBottom: 8,
                                                   }}
                                              >
-                                                  <div style={{ display: 'grid', gap: 8, width: '100%' }}>
-                                                       <button
-                                                            className='saved-class-action saved-class-action--primary'
-                                                            type='submit'
-                                                       >
-                                                            <span aria-hidden='true'>✅</span> Create a complete IELTS mock
-                                                       </button>
-                                                       <button
-                                                            type='button'
-                                                            className='saved-class-action saved-class-action--secondary'
-                                                            onClick={() => createClassroom(undefined, 'listening')}
-                                                       >
-                                                            <span aria-hidden='true'>🎧</span> Create a listening IELTS mock
-                                                       </button>
-                                                       <button
-                                                            type='button'
-                                                            className='saved-class-action saved-class-action--secondary'
-                                                            onClick={() => createClassroom(undefined, 'reading')}
-                                                       >
-                                                            <span aria-hidden='true'>📖</span> Create a reading IELTS mock
-                                                       </button>
-                                                       <button
-                                                            type='button'
-                                                            className='saved-class-action saved-class-action--secondary'
-                                                            onClick={() => createClassroom(undefined, 'speaking')}
-                                                       >
-                                                            <span aria-hidden='true'>🎤</span> Create a speaking IELTS mock
-                                                       </button>
-                                                       <button
-                                                            type='button'
-                                                            className='saved-class-action saved-class-action--secondary'
-                                                            onClick={() => createClassroom(undefined, 'writing')}
-                                                       >
-                                                            <span aria-hidden='true'>✍️</span> Create a writing IELTS mock
-                                                       </button>
+                                                  <div
+                                                       style={{
+                                                            fontWeight: 800,
+                                                       }}
+                                                  >
+                                                       Students
+                                                  </div>
+                                                  <div
+                                                       style={{
+                                                            color: '#66788a',
+                                                            fontSize: 13,
+                                                       }}
+                                                  >
+                                                       {students.length} added
                                                   </div>
                                              </div>
-                                        </form>
+
+                                             <div
+                                                  style={{
+                                                       display: 'flex',
+                                                       gap: 8,
+                                                       marginBottom: 8,
+                                                  }}
+                                             >
+                                                  <input
+                                                       placeholder='Add student email'
+                                                       value={studentInput}
+                                                       onChange={(e) =>
+                                                            setStudentInput(
+                                                                 e.target.value,
+                                                            )
+                                                       }
+                                                       onKeyDown={(e) => {
+                                                            if (
+                                                                 e.key ===
+                                                                 'Enter'
+                                                            ) {
+                                                                 e.preventDefault()
+                                                                 addStudent()
+                                                            }
+                                                       }}
+                                                       style={{ flex: 1 }}
+                                                       type='email'
+                                                  />
+                                                  <button
+                                                       type='button'
+                                                       className='button'
+                                                       onClick={addStudent}
+                                                       style={{
+                                                            padding: '8px 12px',
+                                                       }}
+                                                       disabled={
+                                                            !emailRegex.test(
+                                                                 studentInput.trim(),
+                                                            )
+                                                       }
+                                                  >
+                                                       <span aria-hidden='true'>
+                                                            ＋
+                                                       </span>{' '}
+                                                       Add
+                                                  </button>
+                                             </div>
+
+                                             <div
+                                                  style={{
+                                                       display: 'flex',
+                                                       gap: 8,
+                                                       flexWrap: 'wrap',
+                                                  }}
+                                             >
+                                                  {students.map((s, i) => (
+                                                       <div
+                                                            key={i}
+                                                            style={{
+                                                                 position:
+                                                                      'relative',
+                                                                 display: 'inline-block',
+                                                                 marginBottom: 8,
+                                                            }}
+                                                       >
+                                                            <span
+                                                                 style={{
+                                                                      display: 'inline-flex',
+                                                                      alignItems:
+                                                                           'center',
+                                                                      gap: 8,
+                                                                      padding: '8px 12px',
+                                                                      background:
+                                                                           '#fbfffb',
+                                                                      border: '1px solid #e6f1ea',
+                                                                      borderRadius: 12,
+                                                                      minWidth: 80,
+                                                                 }}
+                                                            >
+                                                                 <span
+                                                                      style={{
+                                                                           color: '#405269',
+                                                                           fontSize: 13,
+                                                                      }}
+                                                                 >
+                                                                      {s}
+                                                                 </span>
+                                                            </span>
+                                                            <button
+                                                                 aria-label={`Remove ${s}`}
+                                                                 type='button'
+                                                                 onClick={() =>
+                                                                      removeStudent(
+                                                                           i,
+                                                                      )
+                                                                 }
+                                                                 style={{
+                                                                      position:
+                                                                           'absolute',
+                                                                      top: -10,
+                                                                      right: -1,
+                                                                      background:
+                                                                           'transparent',
+                                                                      border: 'none',
+                                                                      width: 18,
+                                                                      height: 18,
+                                                                      display: 'grid',
+                                                                      placeItems:
+                                                                           'center',
+                                                                      cursor: 'pointer',
+                                                                      color: '#d65336',
+                                                                      boxShadow:
+                                                                           'none',
+                                                                      fontSize: 12,
+                                                                      lineHeight: 1,
+                                                                 }}
+                                                            >
+                                                                 x
+                                                            </button>
+                                                       </div>
+                                                  ))}
+                                             </div>
+                                        </div>
+
+                                        <div
+                                             style={{
+                                                  display: 'flex',
+                                                  gap: 10,
+                                                  alignItems: 'start',
+                                                  flexDirection: 'column',
+                                             }}
+                                        >
+                                             <div className='flex gap-5'>
+                                                  {loadedSavedId ? (
+                                                       <button
+                                                            type='button'
+                                                            className='button'
+                                                            onClick={
+                                                                 updateCurrentSavedClass
+                                                            }
+                                                            style={{
+                                                                 background:
+                                                                      '#ffd583',
+                                                                 color: '#17233d',
+                                                            }}
+                                                            disabled={
+                                                                 !className.trim() ||
+                                                                 !tutorName.trim() ||
+                                                                 students.length ===
+                                                                      0
+                                                            }
+                                                       >
+                                                            <span aria-hidden='true'>
+                                                                 ✎
+                                                            </span>{' '}
+                                                            Update
+                                                       </button>
+                                                  ) : (
+                                                       <button
+                                                            type='button'
+                                                            className='button'
+                                                            onClick={
+                                                                 createSavedClass
+                                                            }
+                                                            style={{
+                                                                 background:
+                                                                      '#ffd583',
+                                                                 color: '#17233d',
+                                                            }}
+                                                            disabled={
+                                                                 !className.trim() ||
+                                                                 !tutorName.trim() ||
+                                                                 students.length ===
+                                                                      0
+                                                            }
+                                                       >
+                                                            <span aria-hidden='true'>
+                                                                 💾
+                                                            </span>{' '}
+                                                            Save
+                                                       </button>
+                                                  )}
+
+                                                  <button
+                                                       type='button'
+                                                       className='button saved-class-action saved-class-action--primary'
+                                                       disabled={
+                                                            !className.trim() ||
+                                                            !tutorName.trim() ||
+                                                            students.length ===
+                                                                 0
+                                                       }
+                                                       onClick={() =>
+                                                            setStep(2)
+                                                       }
+                                                  >
+                                                       <span aria-hidden='true'>
+                                                            📅
+                                                       </span>{' '}
+                                                       Schedule an IELTS mock
+                                                       for this class.
+                                                  </button>
+                                             </div>
+                                        </div>
                                    </div>
-                              )}
+                              </div>
+                         </>
+                    )}
+
+                    {step === 2 && (
+                         <div style={{ marginTop: 18 }}>
+                              <div
+                                   style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 12,
+                                        marginBottom: 8,
+                                        justifyContent: 'space-between',
+                                   }}
+                              >
+                                   <h3
+                                        style={{
+                                             margin: 0,
+                                             fontSize: 18,
+                                        }}
+                                   >
+                                        Step 2 Schedule & create
+                                   </h3>
+                                   <button
+                                        type='button'
+                                        onClick={() => setStep(1)}
+                                        style={{
+                                             background: '#eee',
+                                             border: 'none',
+                                             color: '#17233d',
+                                             cursor: 'pointer',
+                                             fontSize: 14,
+                                             padding: 8,
+                                        }}
+                                   >
+                                        <span aria-hidden='true'>←</span> step 1
+                                   </button>
+                              </div>
+                              <div
+                                   style={{
+                                        marginBottom: 12,
+                                        padding: '10px 12px',
+                                        borderRadius: 10,
+                                        background: '#f2f8f4',
+                                        color: '#17233d',
+                                        fontWeight: 700,
+                                   }}
+                              >
+                                   Selected class:{' '}
+                                   {className || 'Untitled class'}
+                              </div>
+                              <form
+                                   onSubmit={(e) => {
+                                        e.preventDefault()
+                                        createClassroom(e, 'complete')
+                                   }}
+                              >
+                                   <label>
+                                        Exam date and time
+                                        <input
+                                             name='schedule'
+                                             type='datetime-local'
+                                             required
+                                             min={minSchedule}
+                                             value={schedule}
+                                             onChange={(e) =>
+                                                  setSchedule(e.target.value)
+                                             }
+                                        />
+                                   </label>
+                                   <div
+                                        style={{
+                                             display: 'flex',
+                                             gap: 10,
+                                        }}
+                                   >
+                                        <div
+                                             style={{
+                                                  display: 'flex flex-col',
+                                                  gap: 8,
+                                                  width: '100%',
+                                             }}
+                                        >
+                                             <button
+                                                  className='saved-class-action saved-class-action--primary w-full! mx-4 my-2'
+                                                  type='submit'
+                                             >
+                                                  <span aria-hidden='true'>
+                                                       ✅
+                                                  </span>{' '}
+                                                  Create a complete IELTS mock
+                                             </button>
+                                             <button
+                                                  type='button'
+                                                  className='saved-class-action saved-class-action--secondary w-full! mx-4 my-1'
+                                                  onClick={() =>
+                                                       createClassroom(
+                                                            undefined,
+                                                            'listening',
+                                                       )
+                                                  }
+                                             >
+                                                  <span aria-hidden='true'>
+                                                       🎧
+                                                  </span>{' '}
+                                                  Create a listening IELTS mock
+                                             </button>
+                                             <button
+                                                  type='button'
+                                                  className='saved-class-action saved-class-action--secondary w-full! mx-4 my-1'
+                                                  onClick={() =>
+                                                       createClassroom(
+                                                            undefined,
+                                                            'reading',
+                                                       )
+                                                  }
+                                             >
+                                                  <span aria-hidden='true'>
+                                                       📖
+                                                  </span>{' '}
+                                                  Create a reading IELTS mock
+                                             </button>
+                                             <button
+                                                  type='button'
+                                                  className='saved-class-action saved-class-action--secondary w-full! mx-4 my-1'
+                                                  onClick={() =>
+                                                       createClassroom(
+                                                            undefined,
+                                                            'speaking',
+                                                       )
+                                                  }
+                                             >
+                                                  <span aria-hidden='true'>
+                                                       🎤
+                                                  </span>{' '}
+                                                  Create a speaking IELTS mock
+                                             </button>
+                                             <button
+                                                  type='button'
+                                                  className='saved-class-action saved-class-action--secondary w-full! mx-4 my-1'
+                                                  onClick={() =>
+                                                       createClassroom(
+                                                            undefined,
+                                                            'writing',
+                                                       )
+                                                  }
+                                             >
+                                                  <span aria-hidden='true'>
+                                                       ✍️
+                                                  </span>{' '}
+                                                  Create a writing IELTS mock
+                                             </button>
+                                        </div>
+                                   </div>
+                              </form>
+                         </div>
+                    )}
                </section>
 
                {examModalOpen && (
@@ -812,26 +1114,37 @@ export default function ClassroomSetup() {
                                         padding: 6,
                                    }}
                               >
-                                   {(['upcoming', 'history'] as const).map((tab) => (
-                                        <button
-                                             key={tab}
-                                             type='button'
-                                             onClick={() => setExamTab(tab)}
-                                             style={{
-                                                  flex: 1,
-                                                  padding: '10px 12px',
-                                                  borderRadius: 8,
-                                                  border: 'none',
-                                                  background:
-                                                       examTab === tab ? '#17233d' : 'transparent',
-                                                  color: examTab === tab ? '#fff' : '#17233d',
-                                                  fontWeight: 700,
-                                                  cursor: 'pointer',
-                                             }}
-                                        >
-                                             {tab === 'upcoming' ? 'Upcoming' : 'History'}
-                                        </button>
-                                   ))}
+                                   {(['upcoming', 'history'] as const).map(
+                                        (tab) => (
+                                             <button
+                                                  key={tab}
+                                                  type='button'
+                                                  onClick={() =>
+                                                       setExamTab(tab)
+                                                  }
+                                                  style={{
+                                                       flex: 1,
+                                                       padding: '10px 12px',
+                                                       borderRadius: 8,
+                                                       border: 'none',
+                                                       background:
+                                                            examTab === tab
+                                                                 ? '#17233d'
+                                                                 : 'transparent',
+                                                       color:
+                                                            examTab === tab
+                                                                 ? '#fff'
+                                                                 : '#17233d',
+                                                       fontWeight: 700,
+                                                       cursor: 'pointer',
+                                                  }}
+                                             >
+                                                  {tab === 'upcoming'
+                                                       ? 'Upcoming'
+                                                       : 'History'}
+                                             </button>
+                                        ),
+                                   )}
                               </div>
 
                               {loadingExams ? (
@@ -841,22 +1154,29 @@ export default function ClassroomSetup() {
                               ) : examTab === 'upcoming' ? (
                                    <div style={{ display: 'grid', gap: 10 }}>
                                         {examItems.filter(
-                                             (item) => new Date(item.scheduledAt) >= new Date(),
+                                             (item) =>
+                                                  new Date(item.scheduledAt) >=
+                                                  new Date(),
                                         ).length ? (
                                              examItems
                                                   .filter(
                                                        (item) =>
-                                                            new Date(item.scheduledAt) >=
-                                                            new Date(),
+                                                            new Date(
+                                                                 item.scheduledAt,
+                                                            ) >= new Date(),
                                                   )
                                                   .map((item) => (
                                                        <div
-                                                            key={item._id || item.id}
+                                                            key={
+                                                                 item._id ||
+                                                                 item.id
+                                                            }
                                                             style={{
                                                                  padding: 14,
                                                                  border: '1px solid #e7edf4',
                                                                  borderRadius: 12,
-                                                                 background: '#f9fbfb',
+                                                                 background:
+                                                                      '#f9fbfb',
                                                             }}
                                                        >
                                                             <div
@@ -865,29 +1185,50 @@ export default function ClassroomSetup() {
                                                                       marginBottom: 6,
                                                                  }}
                                                             >
-                                                                 {item.classroomName || 'Classroom'}
+                                                                 {item.classroomName ||
+                                                                      'Classroom'}
                                                             </div>
                                                             <div
                                                                  style={{
                                                                       color: '#1d4f91',
                                                                       fontSize: 12,
                                                                       fontWeight: 700,
-                                                                      textTransform: 'capitalize',
+                                                                      textTransform:
+                                                                           'capitalize',
                                                                       marginBottom: 6,
                                                                  }}
                                                             >
-                                                                 {formatExamType(item.examType)}
+                                                                 {formatExamType(
+                                                                      item.examType,
+                                                                 )}
                                                             </div>
-                                                            <div style={{ color: '#586b7c', fontSize: 13 }}>
-                                                                 {new Date(item.scheduledAt).toLocaleString([], {
-                                                                      dateStyle: 'medium',
-                                                                      timeStyle: 'short',
-                                                                 })}
+                                                            <div
+                                                                 style={{
+                                                                      color: '#586b7c',
+                                                                      fontSize: 13,
+                                                                 }}
+                                                            >
+                                                                 {new Date(
+                                                                      item.scheduledAt,
+                                                                 ).toLocaleString(
+                                                                      [],
+                                                                      {
+                                                                           dateStyle:
+                                                                                'medium',
+                                                                           timeStyle:
+                                                                                'short',
+                                                                      },
+                                                                 )}
                                                             </div>
                                                        </div>
                                                   ))
                                         ) : (
-                                             <p style={{ margin: 0, color: '#66788a' }}>
+                                             <p
+                                                  style={{
+                                                       margin: 0,
+                                                       color: '#66788a',
+                                                  }}
+                                             >
                                                   No upcoming exams scheduled.
                                              </p>
                                         )}
@@ -895,22 +1236,29 @@ export default function ClassroomSetup() {
                               ) : (
                                    <div style={{ display: 'grid', gap: 10 }}>
                                         {examItems.filter(
-                                             (item) => new Date(item.scheduledAt) < new Date(),
+                                             (item) =>
+                                                  new Date(item.scheduledAt) <
+                                                  new Date(),
                                         ).length ? (
                                              examItems
                                                   .filter(
                                                        (item) =>
-                                                            new Date(item.scheduledAt) <
-                                                            new Date(),
+                                                            new Date(
+                                                                 item.scheduledAt,
+                                                            ) < new Date(),
                                                   )
                                                   .map((item) => (
                                                        <div
-                                                            key={item._id || item.id}
+                                                            key={
+                                                                 item._id ||
+                                                                 item.id
+                                                            }
                                                             style={{
                                                                  padding: 14,
                                                                  border: '1px solid #e7edf4',
                                                                  borderRadius: 12,
-                                                                 background: '#f9fbfb',
+                                                                 background:
+                                                                      '#f9fbfb',
                                                             }}
                                                        >
                                                             <div
@@ -919,29 +1267,50 @@ export default function ClassroomSetup() {
                                                                       marginBottom: 6,
                                                                  }}
                                                             >
-                                                                 {item.classroomName || 'Classroom'}
+                                                                 {item.classroomName ||
+                                                                      'Classroom'}
                                                             </div>
                                                             <div
                                                                  style={{
                                                                       color: '#1d4f91',
                                                                       fontSize: 12,
                                                                       fontWeight: 700,
-                                                                      textTransform: 'capitalize',
+                                                                      textTransform:
+                                                                           'capitalize',
                                                                       marginBottom: 6,
                                                                  }}
                                                             >
-                                                                 {formatExamType(item.examType)}
+                                                                 {formatExamType(
+                                                                      item.examType,
+                                                                 )}
                                                             </div>
-                                                            <div style={{ color: '#586b7c', fontSize: 13 }}>
-                                                                 {new Date(item.scheduledAt).toLocaleString([], {
-                                                                      dateStyle: 'medium',
-                                                                      timeStyle: 'short',
-                                                                 })}
+                                                            <div
+                                                                 style={{
+                                                                      color: '#586b7c',
+                                                                      fontSize: 13,
+                                                                 }}
+                                                            >
+                                                                 {new Date(
+                                                                      item.scheduledAt,
+                                                                 ).toLocaleString(
+                                                                      [],
+                                                                      {
+                                                                           dateStyle:
+                                                                                'medium',
+                                                                           timeStyle:
+                                                                                'short',
+                                                                      },
+                                                                 )}
                                                             </div>
                                                        </div>
                                                   ))
                                         ) : (
-                                             <p style={{ margin: 0, color: '#66788a' }}>
+                                             <p
+                                                  style={{
+                                                       margin: 0,
+                                                       color: '#66788a',
+                                                  }}
+                                             >
                                                   No exam history yet.
                                              </p>
                                         )}

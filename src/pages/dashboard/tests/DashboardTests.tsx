@@ -1,15 +1,17 @@
-import { Link, Navigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { getCurrentUser } from '../../../lib/auth'
+import DashboardHeader from '../../../components/DashboardHeader'
 import './tests.css'
 
 const skills = [['Speaking', 'Not started'], ['Writing', 'Not started'], ['Listening', 'Not started'], ['Reading', 'Not started']]
 
 export default function DashboardTests() {
      const user = getCurrentUser()
-     if (!user) return <Navigate to='/auth' replace />
+
+     if (!user) return null
 
      return <main className='tests-page'>
-          <header className='tests-header'><Link to='/dashboard' className='dashboard-brand'><i>i</i>mock<span>.</span></Link><Link to='/dashboard' className='tests-back'>← Back to dashboard</Link></header>
+          <DashboardHeader />
           <section className='tests-content'>
                <p className='tests-kicker'>TESTS &amp; RESULTS</p>
                <h1>Your IELTS practice journey.</h1>

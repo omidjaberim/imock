@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router-dom'
-import { getCurrentUser } from '../../../lib/auth'
+import { Navigate, useParams } from 'react-router-dom'
+import DashboardHeader from '../../../components/DashboardHeader'
 import ReadingPage from './Reading'
 import SpeakingPage from './Speaking'
 import WritingPage from './Writing'
@@ -20,11 +20,9 @@ type ExamKey = keyof typeof exams
 
 export default function DashboardExam() {
      const { skill } = useParams()
-     const user = getCurrentUser()
      const [answer, setAnswer] = useState<string | null>(null)
      const [submitted, setSubmitted] = useState(false)
 
-     if (!user) return <Navigate to='/auth' replace />
      if (!skill || !(skill in exams)) return <Navigate to='/dashboard' replace />
 
      const exam = exams[skill as ExamKey]
@@ -38,10 +36,7 @@ export default function DashboardExam() {
 
      return (
           <main className='exam-page'>
-               <header className='exam-header'>
-                    <Link to='/dashboard' className='dashboard-brand'><i>i</i>mock<span>.</span></Link>
-                    <Link to='/dashboard' className='exam-back'>← Back to dashboard</Link>
-               </header>
+               <DashboardHeader />
                <section className='exam-card'>
                     <p className='exam-kicker'>{exam.title} practice exam</p>
                     <div className='exam-meta'><span>Question 1 of 1</span><span>{exam.duration}</span></div>

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
 import { trackEvent } from '../../../lib/analytics'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { endSession, getCurrentUser } from '../../../lib/auth'
+import { Link, useNavigate } from 'react-router-dom'
+import { getCurrentUser } from '../../../lib/auth'
+import DashboardHeader from '../../../components/DashboardHeader'
 import { Footer } from '../../../components/SiteChrome'
 import './dashboard.css'
 import './dashboard-animations.css'
@@ -30,154 +30,12 @@ function PracticeIcon({ skill }: { skill: string }) {
 export default function DashboardLanding() {
      const user = getCurrentUser()
      const navigate = useNavigate()
-     const [profileMenuState, setProfileMenuState] = useState<
-          'closed' | 'open' | 'closing'
-     >('closed')
-     const profileMenuRef = useRef<HTMLDivElement>(null)
-  
-     useEffect(() => {
-          const closeProfileMenu = (event: MouseEvent) => {
-               if (!profileMenuRef.current?.contains(event.target as Node)) {
-                    setProfileMenuState((state) =>
-                         state === 'open' ? 'closing' : state,
-                    )
-               }
-          }
-          const closeOnEscape = (event: KeyboardEvent) => {
-               if (event.key === 'Escape')
-                    setProfileMenuState((state) =>
-                         state === 'open' ? 'closing' : state,
-                    )
-          }
-
-          document.addEventListener('mousedown', closeProfileMenu)
-          document.addEventListener('keydown', closeOnEscape)
-          return () => {
-               document.removeEventListener('mousedown', closeProfileMenu)
-               document.removeEventListener('keydown', closeOnEscape)
-          }
-     }, [])
-
-     if (!user)
-          return (
-               <Navigate
-                    to='/auth'
-                    replace
-               />
-          )
-
-     const logout = () => {
-          endSession()
-          navigate('/', { replace: true })
-     }
+     if (!user) return null
 
      return (
           <>
                <main className='dashboard-page'>
-                    <header className='dashboard-header'>
-                         <Link
-                              to='/'
-                              className='dashboard-brand'
-                         >
-                              <i>i</i>mock<span>.</span>
-                         </Link>
-                         <div className='dashboard-user'>
-                              <span>Welcome, {user.name}</span>
-                              <div
-                                   className='profile-menu-wrap'
-                                   ref={profileMenuRef}
-                              >
-                                   <button
-                                        className='avatar-button'
-                                        type='button'
-                                        aria-label='Open profile menu'
-                                        aria-expanded={
-                                             profileMenuState === 'open'
-                                        }
-                                        onClick={() =>
-                                             setProfileMenuState((state) =>
-                                                  state === 'open'
-                                                       ? 'closing'
-                                                       : 'open',
-                                             )
-                                        }
-                                   >
-                                        <b>
-                                             {user.name
-                                                  .slice(0, 1)
-                                                  .toUpperCase()}
-                                        </b>
-                                   </button>
-                                   {profileMenuState !== 'closed' && (
-                                        <div
-                                             className={`profile-menu${profileMenuState === 'closing' ? ' is-closing' : ''}`}
-                                             role='menu'
-                                             onAnimationEnd={() => {
-                                                  if (
-                                                       profileMenuState ===
-                                                       'closing'
-                                                  )
-                                                       setProfileMenuState(
-                                                            'closed',
-                                                       )
-                                             }}
-                                        >
-                                             <div className='profile-menu-user'>
-                                                  <b>{user.name}</b>
-                                                  <span>iMock learner</span>
-                                             </div>
-                                             <Link
-                                                  to='/dashboard/settings'
-                                                  role='menuitem'
-                                                  onClick={() =>
-                                                       setProfileMenuState(
-                                                            'closing',
-                                                       )
-                                                  }
-                                             >
-                                                  Account settings
-                                             </Link>
-                                             <Link
-                                                  to='/dashboard/tests'
-                                                  role='menuitem'
-                                                  onClick={() =>
-                                                       setProfileMenuState(
-                                                            'closing',
-                                                       )
-                                                  }
-                                             >
-                                                  Tests &amp; results
-                                             </Link>
-                                             <Link
-                                                  to='/dashboard/classrooms/new'
-                                                  role='menuitem'
-                                                  onClick={() =>
-                                                       setProfileMenuState(
-                                                            'closing',
-                                                       )
-                                                  }
-                                             >
-                                                  My classrooms
-                                             </Link>
-                                             <a
-                                                  href='mailto:hello@imock.ir'
-                                                  role='menuitem'
-                                             >
-                                                  Help &amp; support
-                                             </a>
-                                             <button
-                                                  className='profile-logout'
-                                                  type='button'
-                                                  role='menuitem'
-                                                  onClick={logout}
-                                             >
-                                                  Log out <span>→</span>
-                                             </button>
-                                        </div>
-                                   )}
-                              </div>
-                         </div>
-                    </header>
+                    <DashboardHeader brandTo='/' />
                     <section className='dashboard-hero'>
                          <p className='eyebrow'>YOUR IELTS COMMAND CENTRE</p>
                          <h1>

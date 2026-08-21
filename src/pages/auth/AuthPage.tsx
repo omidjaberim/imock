@@ -30,8 +30,9 @@ export default function AuthPage() {
           name: string,
           provider: 'password' | 'phone' | 'google',
           token?: string,
+          email?: string,
      ) => {
-          startSession({ name, provider, token })
+          startSession({ name, email, provider, token })
           navigate('/dashboard')
      }
 
@@ -52,7 +53,7 @@ export default function AuthPage() {
                          identifier: username,
                          password,
                     })
-                    finishAuth(response.user.name, 'password', response.token)
+                    finishAuth(response.user.name, 'password', response.token, response.user.email)
                } catch (error) {
                     setNotice(
                          error instanceof Error
@@ -75,7 +76,7 @@ export default function AuthPage() {
                     email,
                     password,
                })
-               finishAuth(response.user.name, 'password', response.token)
+               finishAuth(response.user.name, 'password', response.token, response.user.email)
           } catch (error) {
                setNotice(
                     error instanceof Error
@@ -129,6 +130,8 @@ export default function AuthPage() {
                finishAuth(
                     response.user?.name ?? response.user?.phone ?? phone.trim(),
                     'phone',
+                    undefined,
+                    response.user?.email,
                )
           } catch (error) {
                setNotice(

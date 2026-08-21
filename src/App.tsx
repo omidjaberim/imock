@@ -18,6 +18,7 @@ import ClassroomSetup from './pages/dashboard/classroom/ClassroomSetup'
 import EditSavedClass from './pages/dashboard/classroom/EditSavedClass'
 import DashboardSettings from './pages/dashboard/settings/DashboardSettings'
 import DashboardTests from './pages/dashboard/tests/DashboardTests'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
      const location = useLocation()
@@ -30,12 +31,12 @@ function App() {
           <>
                <Routes>
                     <Route path='/auth' element={<AuthPage />} />
-                    <Route path='/dashboard' element={<DashboardLanding />} />
-                    <Route path='/dashboard/exams/:skill' element={<DashboardExam />} />
-                    <Route path='/dashboard/classrooms/new' element={<ClassroomSetup />} />
-                    <Route path='/dashboard/classrooms/edit/:id' element={<EditSavedClass />} />
-                    <Route path='/dashboard/settings' element={<DashboardSettings />} />
-                    <Route path='/dashboard/tests' element={<DashboardTests />} />
+                    <Route path='/dashboard' element={<ProtectedRoute><DashboardLanding /></ProtectedRoute>} />
+                    <Route path='/dashboard/exams/:skill' element={<ProtectedRoute><DashboardExam /></ProtectedRoute>} />
+                    <Route path='/dashboard/classrooms/new' element={<ProtectedRoute><ClassroomSetup /></ProtectedRoute>} />
+                    <Route path='/dashboard/classrooms/edit/:id' element={<ProtectedRoute><EditSavedClass /></ProtectedRoute>} />
+                    <Route path='/dashboard/settings' element={<ProtectedRoute><DashboardSettings /></ProtectedRoute>} />
+                    <Route path='/dashboard/tests' element={<ProtectedRoute><DashboardTests /></ProtectedRoute>} />
                     <Route path='*' element={<div className='site-shell'><Header /><main id='top'><HeroSection /><ProcessSection /><ReportSection /><TeachersSection /><GroupAndBookingSections /></main><Footer /></div>} />
                </Routes>
                <ToastContainer

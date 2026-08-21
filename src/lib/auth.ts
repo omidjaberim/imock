@@ -1,5 +1,6 @@
 export type AuthUser = {
      name: string
+     email?: string
      provider: 'password' | 'phone' | 'google'
      token?: string
 }

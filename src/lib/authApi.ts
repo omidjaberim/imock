@@ -4,12 +4,17 @@ export type ApiUser = { id: string; name: string; username?: string; email?: str
 
 type AuthResponse = { token: string; user: ApiUser }
 
-async function request<T>(path: string, body: Record<string, string>) {
+async function request<T>(path: string, body: Record<string, unknown> = {}, options: { token?: string } = {}) {
      let response: Response
+     const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+     if (options.token) {
+          headers.Authorization = `Bearer ${options.token}`
+     }
+
      try {
           response = await fetch(`${apiUrl}${path}`, {
                method: 'POST',
-               headers: { 'Content-Type': 'application/json' },
+               headers,
                credentials: 'include',
                body: JSON.stringify(body),
           })
@@ -37,4 +42,16 @@ export function registerUser(data: { name: string; username: string; email: stri
 
 export function loginUser(data: { identifier: string; password: string }) {
      return request<AuthResponse>('/auth/login', data)
+}
+
+export function requestPasswordResetCode(token: string) {
+     return request<{ message?: string; expiresInSeconds?: number }>('/auth/password/request-code', {}, { token })
+}
+
+export function verifyPasswordResetCode(token: string, code: string) {
+     return request<{ message?: string }>('/auth/password/verify-code', { code }, { token })
+}
+
+export function changePassword(token: string, data: { code: string; password: string }) {
+     return request<{ message?: string }>('/auth/password/change', data, { token })
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import DashboardHeader from '../../../components/DashboardHeader'
 import ExamIntro from '../../../components/ExamIntro'
 import { trackEvent, postInfraction } from '../../../lib/analytics'
 import './exam.css'
@@ -54,14 +55,7 @@ export default function SpeakingPage() {
 
      return (
           <main className='exam-page'>
-               <header className='exam-header'>
-                    <Link
-                         to='/dashboard'
-                         className='dashboard-brand'
-                    >
-                         <i>i</i>mock<span>.</span>
-                    </Link>
-               </header>
+               <DashboardHeader />
 
                <section className='exam-card'>
                     <p className='exam-kicker'>Speaking practice</p>
